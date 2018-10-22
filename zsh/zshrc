@@ -1,0 +1,71 @@
+export DOTFILES=$HOME/.dotfiles
+export ZSH=$DOTFILES/zsh
+
+# Manually set language environment (needed for connecting to servers with mosh)
+export LC_ALL=en_US.UTF-8
+export LC_CTYPE=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# initialize autocomplete
+# autoload -U compinit add-zsh-hook
+# compinit
+
+# source all .zsh files inside of the zsh/ directory
+for config ($ZSH/**/*.zsh) source $config
+
+export EDITOR='nvim'
+export GIT_EDITOR='nvim'
+
+export PATH=/usr/local/bin:$PATH
+
+# add /usr/local/sbin
+if [[ -d /usr/local/sbin ]]; then
+    export PATH=/usr/local/sbin:$PATH
+fi
+
+# Add yarn bins to PATH 
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+
+# Color sets
+# if [ -z "$TMUX" ]; then
+#    export TERM=xterm-256color-italic
+# else
+#    export TERM=tmux-256color-italic
+# fi
+
+# Base16 shell setup
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+source ~/.base16_theme
+
+# Load ZSH plugins (https://github.com/zplug/zplug)
+if [ -z ${RELOAD}  ]; then
+    export ZPLUG_HOME=/usr/local/opt/zplug
+    source $ZPLUG_HOME/init.zsh
+    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+    zplug 'zsh-users/zsh-syntax-highlighting', defer:2
+    zplug 'zsh-users/zsh-autosuggestions'
+
+    if ! zplug check; then
+        printf "Install? [y/N]: "
+        if read -q; then
+            echo; zplug install
+        fi
+    fi
+
+    zplug load
+fi
+
+# add color to man pages
+export MANROFFOPT='-c'
+export LESS_TERMCAP_mb=$(tput bold; tput setaf 2)
+export LESS_TERMCAP_md=$(tput bold; tput setaf 6)
+export LESS_TERMCAP_me=$(tput sgr0)
+export LESS_TERMCAP_so=$(tput bold; tput setaf 3; tput setab 4)
+export LESS_TERMCAP_se=$(tput rmso; tput sgr0)
+export LESS_TERMCAP_us=$(tput smul; tput bold; tput setaf 7)
+export LESS_TERMCAP_ue=$(tput rmul; tput sgr0)
+export LESS_TERMCAP_mr=$(tput rev)
+export LESS_TERMCAP_mh=$(tput dim)
