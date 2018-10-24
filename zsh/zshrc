@@ -23,6 +23,9 @@ if [[ -d /usr/local/sbin ]]; then
     export PATH=/usr/local/sbin:$PATH
 fi
 
+# adding path directory for custom scripts
+export PATH=$DOTFILES/bin:$PATH
+
 # Add yarn bins to PATH 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
