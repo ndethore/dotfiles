@@ -37,7 +37,7 @@ prompt_git() {
     else
 	commit_count=$(command git rev-list --count --left-right "@{upstream}...HEAD" 2>/dev/null)
 	case $commit_count in
-		# "") echo -n "nothing";; # no upstream
+		"") echo -n "";; # no upstream
 		0$'\t'0) echo -n "";; # nothing to push or pull
 		*$'\t'0) echo -n "↓";;
 		0$'\t'*) echo -n "↑";;
