@@ -1,27 +1,50 @@
 # heavily inspired by the wonderful pure theme
 # https://github.com/sindresorhus/pure
 
-# needed to get things like current git branch
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git # You can add hg too if needed: `git hg`
-zstyle ':vcs_info:git*' use-simple true
-zstyle ':vcs_info:git*' max-exports 2
-zstyle ':vcs_info:git*' formats ' %b' 'x%R'
-zstyle ':vcs_info:git*' actionformats ' %b|%a' 'x%R'
-
 autoload colors && colors
 
-git_dirty() {
-    # check if we're in a git repo
-    command git rev-parse --is-inside-work-tree &>/dev/null || return
+git_is_repo() {
+ command git rev-parse --is-inside-work-tree &>/dev/null
+}
 
-    # check if it's dirty
-    command git diff --quiet --ignore-submodules HEAD &>/dev/null;
-    if [[ $? -eq 1 ]]; then
-        echo "%F{red}✗%f"
-    else
-        echo "%F{green}✔%f"
+git_branch_name() {
+	ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
+	echo -n "${ref#refs/heads/}"
+}
+
+git_has_changes() {
+	local STATUS=''
+	STATUS=$(command git status --porcelain 2> /dev/null | tail -n1)
+	
+ 	if [[ -n $STATUS ]]; then return 0
+	else return 1
+	fi
+}
+
+prompt_git() {
+   if ! git_is_repo ; then
+	    return
     fi
+
+    echo -n " on "
+
+    branch=$(git_branch_name)
+    echo -n "%F{241}$branch%f"
+
+    echo -n "%F{208}"
+    if git_has_changes ; then
+        echo -n "*"
+    else
+	commit_count=$(command git rev-list --count --left-right "@{upstream}...HEAD" 2>/dev/null)
+	case $commit_count in
+		# "") echo -n "nothing";; # no upstream
+		0$'\t'0) echo -n "";; # nothing to push or pull
+		*$'\t'0) echo -n "↓";;
+		0$'\t'*) echo -n "↑";;
+		*) echo -n "⥄";;
+	esac
+     fi
+    echo -n "%f"
 }
 
 upstream_branch() {
@@ -31,49 +54,45 @@ upstream_branch() {
     fi
 }
 
-# get the status of the current branch and it's remote
-# If there are changes upstream, display a ⇣
-# If there are changes that have been committed but not yet pushed, display a ⇡
-git_arrows() {
-    # do nothing if there is no upstream configured
-    command git rev-parse --abbrev-ref @'{u}' &>/dev/null || return
-
-    local arrows=""
-    local status
-    arrow_status="$(command git rev-list --left-right --count HEAD...@'{u}' 2>/dev/null)"
-
-    # do nothing if the command failed
-    (( !$? )) || return
-
-    # split on tabs
-    arrow_status=(${(ps:\t:)arrow_status})
-    local left=${arrow_status[1]} right=${arrow_status[2]}
-
-    (( ${right:-0} > 0 )) && arrows+="%F{011}⇣%f"
-    (( ${left:-0} > 0 )) && arrows+="%F{012}⇡%f"
-
-    echo $arrows
-}
 
 
-# indicate a job (for example, vim) has been backgrounded
-# If there is a job in the background, display a ✱
-suspended_jobs() {
-    local sj
-    sj=$(jobs 2>/dev/null | tail -n 1)
-    if [[ $sj == "" ]]; then
-        echo ""
-    else
-        echo "%{%F{208}%}✱%f"
-    fi
-}
 
 precmd() {
-    vcs_info
-    print -P '\n%F{6}%~'
 }
 
-PROMPT_SYMBOL='❯'
+prompt_end() {
+	echo -n "%{%f%}"
+}
 
-export PROMPT='%(?.%F{207}.%F{160})$PROMPT_SYMBOL%f '
-export RPROMPT='`git_dirty`%F{241}$vcs_info_msg_0_%f`git_arrows``suspended_jobs`'
+prompt_dir() {
+	echo -n '%F{6}%~%f'
+}
+
+prompt_status() {
+	[[ $RETVAL -ne 0 ]] && echo -n "✘"
+  	[[ $UID -eq 0 ]] && echo -n "⚡"
+  	[[ $(jobs -l | wc -l) -gt 0 ]] && echo -n "⚙"
+}
+
+prompt_symbol() {
+	local colors
+	colors=(240 245 250)
+	echo -n " "
+	for color in $colors; do 
+		echo -n "%F{$color}>%f"
+	done
+}
+
+build_prompt() {
+	RETVAL=$?
+	prompt_status
+	prompt_dir
+	prompt_git
+	# prompt_symbol
+	prompt_end
+}
+
+PROMPT_SYMBOL='»'
+
+export PROMPT='$(build_prompt) $PROMPT_SYMBOL '
+export RPROMPT='%F{240}`date "+%H:%M:%S"`%f'
