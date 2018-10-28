@@ -197,11 +197,20 @@ call plug#begin('~/.config/nvim/plugged')
         augroup end
     " }}}
 " }}}
-
+	
 " General Mappings {{{
     " set a map leader for more key combos
     let mapleader = ','
-    
+
+    " The Tab key is mapped to Escape. Press Shift-Tab to insert a Tab.
+    " To minimize Tab use, you can use '<', '>' and ':set autoindent'
+    nnoremap <silent> <Tab> <Esc>:nohlsearch<bar>pclose<CR>
+    vnoremap <Tab> <Esc><Nul> 
+    inoremap <Tab> <Esc>
+    nnoremap <S-Tab> i<Tab><Esc><Right>
+    vnoremap <S-Tab> >gv
+    inoremap <S-Tab> <Tab>
+
     "" no one is really happy until you have this shortcuts
 	cnoreabbrev W! w!
 	cnoreabbrev Q! q!
@@ -213,9 +222,6 @@ call plug#begin('~/.config/nvim/plugged')
 	cnoreabbrev W w
 	cnoreabbrev Q q
 	cnoreabbrev Qall qall
-
-    " remap esc
-    inoremap jk <esc>
 
     " shortcut to save
     nmap <leader>, :w<cr>
