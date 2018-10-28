@@ -15,6 +15,7 @@ fi
 printf "source '$HOME/.dotfiles/zsh/zshrc'" > ~/.zshrc
 printf "so $HOME/.dotfiles/vim/vimrc" > ~/.vimrc
 printf "so $HOME/.dotfiles/vim/vimrc" > ~/.config/nvim/init.vim
+ln -s $HOME/.dotfiles/vim/autoload ~/.config/nvim/autoload
 printf "source-file $HOME/.dotfiles/tmux/tmux.conf" > ~/.tmux.conf
 
 echo
