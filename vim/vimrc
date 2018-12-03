@@ -292,6 +292,10 @@ call plug#begin('~/.config/nvim/plugged')
 
 
 " General Functionality {{{
+"
+    "insert or delete brackets, parens, quotes in pair
+    Plug 'tpope/vim-obsession'
+
     " insert or delete brackets, parens, quotes in pair
     Plug 'jiangmiao/auto-pairs'
 
