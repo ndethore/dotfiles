@@ -71,147 +71,147 @@ call plug#begin('~/.config/nvim/plugged')
     set listchars=tab:→\ ,eol:¬,trail:⋅,extends:❯,precedes:❮
     set showbreak=↪
 
-    set t_Co=256 " Explicitly tell vim that the terminal supports 256 colors
-    " switch cursor to line when in insert mode, and block when not
-    set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
-    \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
-    \,sm:block-blinkwait175-blinkoff150-blinkon175
+set t_Co=256 " Explicitly tell vim that the terminal supports 256 colors
+" switch cursor to line when in insert mode, and block when not
+set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
+\,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
+\,sm:block-blinkwait175-blinkoff150-blinkon175
 
-    if &term =~ '256color'
-        " disable background color erase
-        set t_ut=
-    endif
+if &term =~ '256color'
+	" disable background color erase
+	set t_ut=
+endif
 
-    " enable 24 bit color support if supported
-    if (has("termguicolors"))
-        set termguicolors
-    endif
+" enable 24 bit color support if supported
+if (has("termguicolors"))
+	set termguicolors
+endif
 
-    " highlight conflicts
-    match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+" highlight conflicts
+match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
-    " Load colorschemes
-    Plug 'chriskempson/base16-vim'
-    Plug 'joshdick/onedark.vim'
-     " LightLine {{{
-        Plug 'itchyny/lightline.vim'
-        Plug 'nicknisi/vim-base16-lightline'
+" Load colorschemes
+Plug 'chriskempson/base16-vim'
+Plug 'joshdick/onedark.vim'
+	" LightLine {{{
+	Plug 'itchyny/lightline.vim'
+	Plug 'nicknisi/vim-base16-lightline'
 
-	let g:lightline = {
-        \   'colorscheme': 'base16',
-        \   'active': {
-        \       'left': [ [ 'mode', 'paste' ],
-        \               [ 'gitbranch' ],
-        \               [ 'readonly', 'filetype', 'filename' ]],
-        \       'right': [ [ 'percent' ], [ 'lineinfo' ],
-        \               [ 'fileformat', 'fileencoding' ],
-        \               [ 'linter_errors', 'linter_warnings' ]]
-        \   },
-        \   'component_expand': {
-        \       'linter': 'LightlineLinter',
-        \       'linter_warnings': 'LightlineLinterWarnings',
-        \       'linter_errors': 'LightlineLinterErrors',
-        \       'linter_ok': 'LightlineLinterOk'
-        \   },
-        \   'component_type': {
-        \       'readonly': 'error',
-        \       'linter_warnings': 'warning',
-        \       'linter_errors': 'error'
-        \   },
-        \   'component_function': {
-        \       'fileencoding': 'LightlineFileEncoding',
-        \       'filename': 'LightlineFileName',
-        \       'fileformat': 'LightlineFileFormat',
-        \       'filetype': 'LightlineFileType',
-        \       'gitbranch': 'LightlineGitBranch'
-        \   },
-        \   'tabline': {
-        \       'left': [ [ 'tabs' ] ],
-        \       'right': [ [ 'close' ] ]
-        \   },
-        \   'tab': {
-        \       'active': [ 'filename', 'modified' ],
-        \       'inactive': [ 'filename', 'modified' ],
-        \   },
-        \   'separator': { 'left': '', 'right': '' },
-        \   'subseparator': { 'left': '', 'right': '' }
-        \ }
-        " \   'separator': { 'left': '▓▒░', 'right': '░▒▓' },
-        " \   'subseparator': { 'left': '▒', 'right': '░' }
+let g:lightline = {
+	\   'colorscheme': 'base16',
+	\   'active': {
+	\       'left': [ [ 'mode', 'paste' ],
+	\               [ 'gitbranch' ],
+	\               [ 'readonly', 'filetype', 'filename' ]],
+	\       'right': [ [ 'percent' ], [ 'lineinfo' ],
+	\               [ 'fileformat', 'fileencoding' ],
+	\               [ 'linter_errors', 'linter_warnings' ]]
+	\   },
+	\   'component_expand': {
+	\       'linter': 'LightlineLinter',
+	\       'linter_warnings': 'LightlineLinterWarnings',
+	\       'linter_errors': 'LightlineLinterErrors',
+	\       'linter_ok': 'LightlineLinterOk'
+	\   },
+	\   'component_type': {
+	\       'readonly': 'error',
+	\       'linter_warnings': 'warning',
+	\       'linter_errors': 'error'
+	\   },
+	\   'component_function': {
+	\       'fileencoding': 'LightlineFileEncoding',
+	\       'filename': 'LightlineFileName',
+	\       'fileformat': 'LightlineFileFormat',
+	\       'filetype': 'LightlineFileType',
+	\       'gitbranch': 'LightlineGitBranch'
+	\   },
+	\   'tabline': {
+	\       'left': [ [ 'tabs' ] ],
+	\       'right': [ [ 'close' ] ]
+	\   },
+	\   'tab': {
+	\       'active': [ 'filename', 'modified' ],
+	\       'inactive': [ 'filename', 'modified' ],
+	\   },
+	\   'separator': { 'left': '', 'right': '' },
+	\   'subseparator': { 'left': '', 'right': '' }
+	\ }
+	" \   'separator': { 'left': '▓▒░', 'right': '░▒▓' },
+	" \   'subseparator': { 'left': '▒', 'right': '░' }
 
-        function! LightlineFileName() abort
-            let filename = winwidth(0) > 70 ? expand('%') : expand('%:t')
-            if filename =~ 'NERD_tree'
-                return ''
-            endif
-            let modified = &modified ? ' +' : ''
-            return fnamemodify(filename, ":~:.") . modified
-        endfunction
+	function! LightlineFileName() abort
+		let filename = winwidth(0) > 70 ? expand('%') : expand('%:t')
+		if filename =~ 'NERD_tree'
+			return ''
+		endif
+		let modified = &modified ? ' +' : ''
+		return fnamemodify(filename, ":~:.") . modified
+	endfunction
 
-        function! LightlineFileEncoding()
-            " only show the file encoding if it's not 'utf-8'
-            return &fileencoding == 'utf-8' ? '' : &fileencoding
-        endfunction
+	function! LightlineFileEncoding()
+		" only show the file encoding if it's not 'utf-8'
+		return &fileencoding == 'utf-8' ? '' : &fileencoding
+	endfunction
 
-        function! LightlineFileFormat()
-            " only show the file format if it's not 'unix'
-            let format = &fileformat == 'unix' ? '' : &fileformat
-            return winwidth(0) > 70 ? format : '' 
-            " return winwidth(0) > 70 ? format . ' ' . WebDevIconsGetFileFormatSymbol() : ''
-        endfunction
+	function! LightlineFileFormat()
+		" only show the file format if it's not 'unix'
+		let format = &fileformat == 'unix' ? '' : &fileformat
+		return winwidth(0) > 70 ? format : '' 
+		" return winwidth(0) > 70 ? format . ' ' . WebDevIconsGetFileFormatSymbol() : ''
+	endfunction
 
-        function! LightlineFileType()
-            return ''
-            " return WebDevIconsGetFileTypeSymbol()
-        endfunction
+	function! LightlineFileType()
+		return ''
+		" return WebDevIconsGetFileTypeSymbol()
+	endfunction
 
-        function! LightlineLinter() abort
-            let l:counts = ale#statusline#Count(bufnr(''))
-            return l:counts.total == 0 ? '' : printf('×%d', l:counts.total)
-        endfunction
+	function! LightlineLinter() abort
+		let l:counts = ale#statusline#Count(bufnr(''))
+		return l:counts.total == 0 ? '' : printf('×%d', l:counts.total)
+	endfunction
 
-        function! LightlineLinterWarnings() abort
-            let l:counts = ale#statusline#Count(bufnr(''))
-            let l:all_errors = l:counts.error + l:counts.style_error
-            let l:all_non_errors = l:counts.total - l:all_errors
-            return l:counts.total == 0 ? '' : '⚠ ' . printf('%d', all_non_errors)
-        endfunction
+	function! LightlineLinterWarnings() abort
+		let l:counts = ale#statusline#Count(bufnr(''))
+		let l:all_errors = l:counts.error + l:counts.style_error
+		let l:all_non_errors = l:counts.total - l:all_errors
+		return l:counts.total == 0 ? '' : '⚠ ' . printf('%d', all_non_errors)
+	endfunction
 
-        function! LightlineLinterErrors() abort
-            let l:counts = ale#statusline#Count(bufnr(''))
-            let l:all_errors = l:counts.error + l:counts.style_error
-            return l:counts.total == 0 ? '' : '✖ ' . printf('%d', all_errors)
-        endfunction
+	function! LightlineLinterErrors() abort
+		let l:counts = ale#statusline#Count(bufnr(''))
+		let l:all_errors = l:counts.error + l:counts.style_error
+		return l:counts.total == 0 ? '' : '✖ ' . printf('%d', all_errors)
+	endfunction
 
-        function! LightlineLinterOk() abort
-            let l:counts = ale#statusline#Count(bufnr(''))
-            return l:counts.total == 0 ? 'OK' : ''
-        endfunction
+	function! LightlineLinterOk() abort
+		let l:counts = ale#statusline#Count(bufnr(''))
+		return l:counts.total == 0 ? 'OK' : ''
+	endfunction
 
-        function! LightlineGitBranch()
-            return "\uE725" . (exists('*fugitive#head') ? fugitive#head() : '')
-        endfunction
+	function! LightlineGitBranch()
+		return "\uE725" . (exists('*fugitive#head') ? fugitive#head() : '')
+	endfunction
 
-        function! LightlineUpdate()
-            if g:goyo_entered == 0
-                " do not update lightline if in Goyo mode
-                call lightline#update()
-            endif
-        endfunction
+	function! LightlineUpdate()
+		if g:goyo_entered == 0
+			" do not update lightline if in Goyo mode
+			call lightline#update()
+		endif
+	endfunction
 
-        augroup alestatus
-            autocmd User ALELint call LightlineUpdate()
-        augroup end
-    " }}}
+	augroup alestatus
+		autocmd User ALELint call LightlineUpdate()
+	augroup end
 " }}}
-	
-" General Mappings {{{
-    " set a map leader for more key combos
-    let mapleader = ','
+" }}}
 
-    " The Tab key is mapped to Escape. Press Shift-Tab to insert a Tab.
-    " To minimize Tab use, you can use '<', '>' and ':set autoindent'
-    nnoremap <silent> <Tab> <Esc>:nohlsearch<bar>pclose<CR>
+" General Mappings {{{
+" set a map leader for more key combos
+let mapleader = ','
+
+" The Tab key is mapped to Escape. Press Shift-Tab to insert a Tab.
+" To minimize Tab use, you can use '<', '>' and ':set autoindent'
+nnoremap <silent> <Tab> <Esc>:nohlsearch<bar>pclose<CR>
     vnoremap <Tab> <Esc><Nul> 
     inoremap <Tab> <Esc>
     nnoremap <S-Tab> i<Tab><Esc><Right>
@@ -276,14 +276,15 @@ call plug#begin('~/.config/nvim/plugged')
     " nnoremap <silent> ^ g^
     " nnoremap <silent> $ g$
 
+	" NOTE : Trying out autochdir
     "" Set working directory
     " nnoremap <leader>. :lcd %:p:h<CR>
+	
+    "  Opens an edit command with the path of the currently edited file filled in
+    " noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-    "" Opens an edit command with the path of the currently edited file filled in
-    noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-    "" Opens a tab edit command with the path of the currently edited file filled
-    noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
+    " Opens a tab edit command with the path of the currently edited file filled
+    " noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
     " helpers for dealing with other people's code
     nmap \t :set ts=4 sts=4 sw=4 noet<cr>
@@ -477,11 +478,11 @@ call plug#begin('~/.config/nvim/plugged')
     " }}}
 
     " UltiSnips {{{
-        Plug 'SirVer/ultisnips' " Snippets plugin
-        let g:UltiSnipsExpandTrigger="<tab>"
-	let g:UltiSnipsJumpForwardTrigger="<tab>"
-	let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-	let g:UltiSnipsEditSplit="vertical"
+        " Plug 'SirVer/ultisnips' " Snippets plugin
+        " let g:UltiSnipsExpandTrigger="<tab>"
+	" let g:UltiSnipsJumpForwardTrigger="<tab>"
+	" let g:UltiSnipsJumpBackwardTrigger="<c-b>"
+	" let g:UltiSnipsEditSplit="vertical"
     " }}}
     
     " Completion {{{
