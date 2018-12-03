@@ -21,6 +21,8 @@ call plug#begin('~/.config/nvim/plugged')
 	set ignorecase
 	set smartcase
 
+	" make vim's base directory match the one of the file being edited
+	set autochdir
 " }}}
 
 " Appearance {{{
