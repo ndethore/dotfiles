@@ -16,6 +16,11 @@ call plug#begin('~/.config/nvim/plugged')
 	set visualbell
 	set t_vb=
 	set tm=500
+	
+	" make search case insensitive unless camel case is detected
+	set ignorecase
+	set smartcase
+
 " }}}
 
 " Appearance {{{
