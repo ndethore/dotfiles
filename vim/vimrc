@@ -304,6 +304,9 @@ call plug#begin('~/.config/nvim/plugged')
     " detect indent style (tabs vs. spaces)
     Plug 'tpope/vim-sleuth'
 
+    " add/edit surrounding tags or characters
+    Plug 'tpope/vim-surround'
+
     " context-aware pasting
     Plug 'sickill/vim-pasta'
 
