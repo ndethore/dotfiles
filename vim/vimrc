@@ -511,6 +511,9 @@ call plug#begin('~/.config/nvim/plugged')
 
         " pug / jade support
         Plug 'digitaltoad/vim-pug', { 'for': ['jade', 'pug'] }
+
+	au BufNewFile,BufRead *.ejs set filetype=html
+
     " }}}
 
     " JavaScript {{{
