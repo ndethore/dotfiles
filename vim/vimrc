@@ -1,6 +1,7 @@
 " .vimrc / init.vim
 " The following vim/neovim configuration works for both Vim and NeoVim
-"
+
+
 " " ensure vim-plug is installed and then load it
 call plug#begin('~/.config/nvim/plugged')
 
@@ -22,7 +23,7 @@ call plug#begin('~/.config/nvim/plugged')
 	set smartcase
 
 	" make vim's base directory match the one of the file being edited
-	set autochdir
+	" set autochdir
 " }}}
 
 " Appearance {{{
@@ -77,67 +78,59 @@ set guicursor=n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50
 \,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor
 \,sm:block-blinkwait175-blinkoff150-blinkon175
 
-if &term =~ '256color'
-	" disable background color erase
-	set t_ut=
-endif
-
-" enable 24 bit color support if supported
-if (has("termguicolors"))
-	set termguicolors
-endif
 
 " highlight conflicts
 match ErrorMsg '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 
 " Load colorschemes
-Plug 'chriskempson/base16-vim'
-Plug 'joshdick/onedark.vim'
-	" LightLine {{{
-	Plug 'itchyny/lightline.vim'
-	Plug 'nicknisi/vim-base16-lightline'
+" Plug 'chriskempson/base16-vim'
+"Plug 'joshdick/onedark.vim'
+Plug 'marciomazza/vim-brogrammer-theme'
 
-let g:lightline = {
-	\   'colorscheme': 'base16',
-	\   'active': {
-	\       'left': [ [ 'mode', 'paste' ],
-	\               [ 'gitbranch' ],
-	\               [ 'readonly', 'filetype', 'filename' ]],
-	\       'right': [ [ 'percent' ], [ 'lineinfo' ],
-	\               [ 'fileformat', 'fileencoding' ],
-	\               [ 'linter_errors', 'linter_warnings' ]]
-	\   },
-	\   'component_expand': {
-	\       'linter': 'LightlineLinter',
-	\       'linter_warnings': 'LightlineLinterWarnings',
-	\       'linter_errors': 'LightlineLinterErrors',
-	\       'linter_ok': 'LightlineLinterOk'
-	\   },
-	\   'component_type': {
-	\       'readonly': 'error',
-	\       'linter_warnings': 'warning',
-	\       'linter_errors': 'error'
-	\   },
-	\   'component_function': {
-	\       'fileencoding': 'LightlineFileEncoding',
-	\       'filename': 'LightlineFileName',
-	\       'fileformat': 'LightlineFileFormat',
-	\       'filetype': 'LightlineFileType',
-	\       'gitbranch': 'LightlineGitBranch'
-	\   },
-	\   'tabline': {
-	\       'left': [ [ 'tabs' ] ],
-	\       'right': [ [ 'close' ] ]
-	\   },
-	\   'tab': {
-	\       'active': [ 'filename', 'modified' ],
-	\       'inactive': [ 'filename', 'modified' ],
-	\   },
-	\   'separator': { 'left': '', 'right': '' },
-	\   'subseparator': { 'left': '', 'right': '' }
-	\ }
-	" \   'separator': { 'left': '▓▒░', 'right': '░▒▓' },
-	" \   'subseparator': { 'left': '▒', 'right': '░' }
+" LightLine {{{
+	Plug 'itchyny/lightline.vim'
+
+       let g:lightline = {
+        \   'active': {
+        \       'left': [ [ 'mode', 'paste' ],
+        \               [ 'gitbranch' ],
+        \               [ 'readonly', 'filetype', 'filename' ]],
+        \       'right': [ [ 'percent' ], [ 'lineinfo' ],
+        \               [ 'fileformat', 'fileencoding' ],
+        \               [ 'linter_errors', 'linter_warnings' ]]
+        \   },
+        \   'component_expand': {
+        \       'linter': 'LightlineLinter',
+        \       'linter_warnings': 'LightlineLinterWarnings',
+        \       'linter_errors': 'LightlineLinterErrors',
+        \       'linter_ok': 'LightlineLinterOk'
+        \   },
+        \   'component_type': {
+        \       'readonly': 'error',
+        \       'linter_warnings': 'warning',
+        \       'linter_errors': 'error'
+        \   },
+        \   'component_function': {
+        \       'fileencoding': 'LightlineFileEncoding',
+        \       'filename': 'LightlineFileName',
+        \       'fileformat': 'LightlineFileFormat',
+        \       'filetype': 'LightlineFileType',
+        \       'gitbranch': 'LightlineGitBranch'
+        \   },
+        \   'tabline': {
+        \       'left': [ [ 'tabs' ] ],
+        \       'right': [ [ 'close' ] ]
+        \   },
+        \   'tab': {
+        \       'active': [ 'filename', 'modified' ],
+        \       'inactive': [ 'filename', 'modified' ],
+        \   },
+        \   'separator': { 'left': '', 'right': '' },
+        \   'subseparator': { 'left': '', 'right': '' }
+        \ }
+        " \   'separator': { 'left': '▓▒░', 'right': '░▒▓' },
+        " \   'subseparator': { 'left': '▒', 'right': '░' }
+
 
 	function! LightlineFileName() abort
 		let filename = winwidth(0) > 70 ? expand('%') : expand('%:t')
@@ -649,14 +642,7 @@ call plug#end()
 " Colorscheme and final setup {{{
     " This call must happen after the plug#end() call to ensure
     " that the colorschemes have been loaded
-    if filereadable(expand("~/.vimrc_background"))
-        let base16colorspace=256
-        source ~/.vimrc_background
-    else
-        let g:onedark_termcolors=16
-        let g:onedark_terminal_italics=1
-        colorscheme onedark
-    endif
+    colorscheme brogrammer
     syntax on
     filetype plugin indent on
 " }}}
